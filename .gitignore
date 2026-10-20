@@ -1,0 +1,63 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+backend/.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!.backend/.env.example
+
+# Pytest / Coverage / Tool Caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Databases & Local Runtime Storage
+*.db
+*.sqlite
+*.sqlite3
+backend/nuvin_dev.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & Editor Configs
+.idea/
+*.iml
+.vscode/
+
+# Flutter & Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/coverage/
+mobile/.widget_preview/
+mobile/android/app/debug/
+mobile/android/app/profile/
+mobile/android/app/release/

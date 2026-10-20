@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nuvin — A little more support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B132B;
+            --card: #162138;
+            --card-foreground: #F2F7FB;
+            --text: #F2F7FB;
+            --primary: #48CAE4;
+            --primary-fg: #0B132B;
+            --secondary: #202C48;
+            --secondary-fg: #ECF3F9;
+            --muted-fg: #AAB7C9;
+            --accent: #FFB703;
+            --destructive: #E63946;
+            --border: #28364F;
+            --success: #64DDAA;
+            --danger-muted: #F08A91;
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            background: #050a18;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 16px 10px;
+            color: var(--text);
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Mobile Frame Container */
+        .phone-frame {
+            width: 100%;
+            max-width: 412px;
+            height: min(840px, calc(100vh - 32px));
+            background: var(--bg);
+            border-radius: 42px;
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.8), 0 0 0 10px #141C30;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* --- AUTH SCREEN STYLES (Screenshot Match) --- */
+        .auth-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 34px 22px 24px 22px;
+            overflow-y: auto;
+            justify-content: center;
+        }
+        .auth-brand-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .auth-brand-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+        .auth-brand-caption {
+            font-size: 0.82rem;
+            color: var(--muted-fg);
+            font-weight: 500;
+            margin-top: 1px;
+        }
+        .auth-card {
+            background: var(--card);
+            border-radius: 24px;
+            border: 1.2px solid var(--border);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+        .auth-eyebrow {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .auth-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        .auth-subtitle {
+            font-size: 0.85rem;
+            color: var(--muted-fg);
+            line-height: 1.35;
+            margin-bottom: 20px;
+        }
+        .auth-mode-switch {
+            display: flex;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .auth-mode-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .auth-mode-btn.active {
+            background: var(--primary);
+            color: var(--primary-fg);
+        }
+        .google-btn {
+            height: 50px;
+            border-radius: 14px;
+            background: var(--bg);
+            border: 1.2px solid var(--border);
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+        .google-btn:hover { filter: brightness(1.2); }
+        .google-icon-circle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--bg);
+            font-size: 0.75rem;
+        }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 18px 0 16px 0;
+            gap: 10px;
+        }
+        .auth-divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .auth-divider-text {
+            font-size: 0.75rem;
+            color: #6A7B94;
+            font-weight: 500;
+        }
+        .auth-field-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .auth-input-box {
+            height: 50px;
+            background: var(--bg);
+            border: 1.2px solid var(--border);
+            border-radius: 12px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .auth-input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .auth-input-box input::placeholder { color: #56657F; }
+        .auth-submit-btn {
+            height: 52px;
+            border-radius: 16px;
+            background: var(--primary);
+            color: var(--primary-fg);
+            border: none;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: transform 0.15s;
+        }
+        .auth-submit-btn:hover { transform: scale(1.02); }
+        .auth-footnote {
+            text-align: center;
+            font-size: 0.72rem;
+            color: #718298;
+            margin-top: 16px;
+            line-height: 1.4;
+        }
+
+        /* --- LOGGED-IN COMPANION SCREEN STYLES --- */
+        .companion-view {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        .header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            z-index: 10;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text);
+        }
+        .online-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--muted-fg);
+            font-weight: 500;
+        }
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: #B6C5D8;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .icon-btn:hover { background: var(--secondary); }
+        .sos-btn {
+            background: var(--destructive);
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(230, 57, 70, 0.4);
+            transition: transform 0.15s;
+        }
+        .sos-btn:hover { transform: scale(1.04); }
+
+        .main-scroll {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .welcome-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4px;
+        }
+        .day-label {
+            font-size: 0.72rem;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            color: var(--muted-fg);
+        }
+        .welcome-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 2px;
+        }
+        .private-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--secondary);
+            border: 1px solid rgba(72, 202, 228, 0.25);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .mode-switch {
+            display: flex;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+        }
+        .mode-opt {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: var(--muted-fg);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .mode-opt.active {
+            background: var(--primary);
+            color: var(--primary-fg);
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .msg-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .msg-row.user {
+            justify-content: flex-end;
+        }
+        .msg-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .bubble {
+            max-width: 82%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            border-radius: 18px;
+        }
+        .bubble.assistant {
+            background: var(--card);
+            color: var(--text);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border);
+        }
+        .bubble.user {
+            background: var(--primary);
+            color: var(--primary-fg);
+            border-bottom-right-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Action Cards */
+        .action-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .card-heading-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .icon-tile {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-title-copy { flex: 1; }
+        .card-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+        .card-eyebrow { font-size: 0.75rem; color: var(--muted-fg); font-weight: 500; }
+        .card-body-box {
+            background: rgba(32, 44, 72, 0.6);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text);
+        }
+        .action-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .action-pill-btn {
+            flex: 1;
+            min-width: 45%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--secondary);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .action-pill-btn.success {
+            background: rgba(100, 221, 170, 0.18);
+            color: var(--success);
+            border-color: rgba(100, 221, 170, 0.4);
+        }
+        .action-pill-btn.danger {
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--destructive);
+            border-color: rgba(230, 57, 70, 0.35);
+        }
+        .forget-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Voice View (Zero-scroll, fits on screen) */
+        .voice-section {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            gap: 12px;
+        }
+        .orb-stage {
+            width: 240px;
+            height: 240px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .orb-ripple {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(72, 202, 228, 0.25);
+            animation: orbRipple 2.2s infinite ease-out;
+        }
+        .orb-ring {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(27, 49, 80, 0.6);
+        }
+        .orb-core {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #75F2F5 0%, #48CAE4 35%, #1788A6 70%, #123D64 100%);
+            box-shadow: 0 0 35px rgba(72, 202, 228, 0.4), inset 0 6px 16px rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: orbBreathe 3s infinite ease-in-out;
+        }
+        .orb-core svg { width: 44px; height: 44px; fill: #09233C; }
+        .orb-status { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+        .orb-hint { font-size: 0.78rem; color: var(--muted-fg); }
+        @keyframes orbBreathe {
+            0%, 100% { transform: scale(0.97); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes orbRipple {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+
+        .composer {
+            padding: 14px 18px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-tray {
+            flex: 1;
+            background: var(--secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 2px 14px;
+        }
+        .input-tray input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 10px 4px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .input-tray input::placeholder { color: #8290A4; }
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--primary-fg);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .output-choices { display: flex; gap: 10px; justify-content: center; width: 100%; }
+        .audio-pill {
+            padding: 8px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted-fg);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .audio-pill.active { background: var(--secondary); color: var(--text); border-color: var(--primary); }
+
+        .modal-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            padding: 20px;
+            align-items: flex-end;
+        }
+        .sheet-card {
+            width: 100%;
+            background: var(--card);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        /* Intro Carousel */
+        .intro-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px 22px 24px;
+            position: relative;
+            background-color: #2c333f;
+            background-image: url('/intro/clean_bg_1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.35s ease;
+            box-sizing: border-box;
+        }
+        .intro-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.08) 32%, rgba(0,0,0,0.58) 66%, rgba(0,0,0,0.88) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .intro-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .intro-title {
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            line-height: 1.25;
+            color: #FFFFFF;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .intro-sub {
+            font-size: 0.9rem;
+            line-height: 1.42;
+            color: rgba(255,255,255,0.92);
+            font-weight: 400;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .intro-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            margin: 14px 0 10px;
+        }
+        .intro-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.25s ease;
+        }
+        .intro-dot.active {
+            width: 30px;
+            height: 5px;
+            border-radius: 4px;
+            background: #FFFFFF;
+        }
+        .intro-btn {
+            height: 52px;
+            border-radius: 28px;
+            background: #FBFBF9;
+            color: #1A1A1A;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            width: 100%;
+        }
+        .intro-skip {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 6px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Onboarding Flow */
+        .onboarding-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 22px;
+            background: #0B132B;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .onboarding-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .progress-bar-rail {
+            width: 100%;
+            height: 4px;
+            background: #202D45;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #48CAE4;
+            transition: width 0.3s ease;
+        }
+        .step-kicker {
+            color: #68C9D8;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .step-title {
+            color: #F1F5F8;
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .step-sub {
+            color: #AAB7C9;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        .option-card {
+            background: #131E33;
+            border: 1px solid #28364F;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-card.selected {
+            background: rgba(72, 202, 228, 0.12);
+            border-color: #48CAE4;
+        }
+        .topic-chip {
+            background: #131E33;
+            border: 1px solid #28364F;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #E6EDF4;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            margin: 4px;
+        }
+        .topic-chip.selected {
+            background: rgba(72, 202, 228, 0.18);
+            border-color: #48CAE4;
+            color: #48CAE4;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+    <!-- 0. APP INTRO CAROUSEL (3 Slides from User Screenshots) -->
+    <div class="intro-view" id="introView">
+        <div class="intro-overlay"></div>
+        <div class="intro-content">
+            <div class="intro-title" id="introTitle">A safe space for what you can't say out loud.</div>
+            <div class="intro-sub" id="introSub">Nuvin listens — gently, without judgment, whenever you need.</div>
+            
+            <div class="intro-dots">
+                <div class="intro-dot active" id="dot0"></div>
+                <div class="intro-dot" id="dot1"></div>
+                <div class="intro-dot" id="dot2"></div>
+            </div>
+
+            <button class="intro-btn" onclick="nextIntroSlide()">
+                <span id="introBtnText">Continue</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <button class="intro-skip" id="introSkipBtn" onclick="skipIntro()">Skip</button>
+        </div>
+    </div>
+
+    <!-- 0.5. MULTI-STEP GUIDED ONBOARDING WIZARD (Steps 1-5) -->
+    <div class="onboarding-view" id="onboardingView" style="display: none;">
+        <div class="onboarding-top">
+            <button onclick="prevOnboardingStep()" id="onboardingBackBtn" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; visibility: hidden;">←</button>
+            <button onclick="skipOnboarding()" style="background: none; border: none; color: #8F9FB5; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Skip for now</button>
+        </div>
+        <div class="progress-bar-rail">
+            <div class="progress-bar-fill" id="onboardingProgress" style="width: 20%;"></div>
+        </div>
+
+        <!-- Step 1: Name & Companion -->
+        <div id="obStep1">
+            <div class="step-kicker">STEP 1 OF 5</div>
+            <div class="step-title">What should I call you?</div>
+            <div class="step-sub">A friendly name you feel comfortable hearing.</div>
+            
+            <label class="input-label">YOUR NAME</label>
+            <input type="text" class="auth-input" id="obUserName" placeholder="e.g. Ramesh or Pooja" style="margin-bottom: 20px;">
+            
+            <label class="input-label">COMPANION NAME</label>
+            <input type="text" class="auth-input" id="obCompName" value="Nuvin" style="margin-bottom: 10px;">
+            <div style="display: flex; gap: 8px;">
+                <button class="topic-chip selected" onclick="setCompChoice('Nuvin')">Nuvin</button>
+                <button class="topic-chip" onclick="setCompChoice('Saathi')">Saathi</button>
+                <button class="topic-chip" onclick="setCompChoice('Mitra')">Mitra</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Age & Persona -->
+        <div id="obStep2" style="display: none;">
+            <div class="step-kicker">STEP 2 OF 5</div>
+            <div class="step-title">How old are you?</div>
+            <div class="step-sub">This adapts text size, touch targets, and conversation tone.</div>
+            
+            <label class="input-label">YOUR AGE</label>
+            <input type="number" class="auth-input" id="obAge" value="62" style="margin-bottom: 20px;" oninput="updatePersonaByAge(this.value)">
+
+            <label class="input-label">RECOMMENDED PERSONA</label>
+            <div class="option-card selected" id="personaElderCard" onclick="selectPersona('elder')">
+                <span style="font-size: 2rem;">🧓</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700; font-size: 0.95rem;">Elder Care & Support (55+)</div>
+                    <div style="color: #AAB7C9; font-size: 0.8rem; margin-top: 3px;">Respectful tone (Ji/Namaste), larger text, medicine reminders, and daily check-ins.</div>
+                </div>
+            </div>
+            <div class="option-card" id="personaEarCard" onclick="selectPersona('ear')">
+                <span style="font-size: 2rem;">🎧</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700; font-size: 0.95rem;">Everyday Ear (20–50)</div>
+                    <div style="color: #AAB7C9; font-size: 0.8rem; margin-top: 3px;">Friendly, attentive sounding board for daily stress, work thoughts, and calm reflection.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Occupation -->
+        <div id="obStep3" style="display: none;">
+            <div class="step-kicker">STEP 3 OF 5</div>
+            <div class="step-title">What fills your days?</div>
+            <div class="step-sub">Helps Nuvin understand your daily rhythm and active hours.</div>
+
+            <div class="option-card selected" onclick="selectOcc(this, 'Retired & Relaxing')">
+                <span style="font-size: 1.6rem;">🏡</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700;">Retired & Relaxing</div>
+                    <div style="color: #AAB7C9; font-size: 0.78rem;">Enjoying free time, family, and peaceful days</div>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOcc(this, 'Homemaker')">
+                <span style="font-size: 1.6rem;">🍳</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700;">Homemaker</div>
+                    <div style="color: #AAB7C9; font-size: 0.78rem;">Caring for home, family, and daily cooking</div>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOcc(this, 'Working Professional')">
+                <span style="font-size: 1.6rem;">💼</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700;">Working Professional</div>
+                    <div style="color: #AAB7C9; font-size: 0.78rem;">Navigating career, meetings, and busy hours</div>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOcc(this, 'Student')">
+                <span style="font-size: 1.6rem;">🎓</span>
+                <div>
+                    <div style="color: #F1F5F8; font-weight: 700;">Student</div>
+                    <div style="color: #AAB7C9; font-size: 0.78rem;">Studies, exams, and learning new things</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Topics -->
+        <div id="obStep4" style="display: none;">
+            <div class="step-kicker">STEP 4 OF 5</div>
+            <div class="step-title">What would you like to talk about?</div>
+            <div class="step-sub">Select what interests you. You can talk about anything anytime.</div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <button class="topic-chip selected" onclick="toggleTopic(this)">💊 Daily Medicines & Health</button>
+                <button class="topic-chip selected" onclick="toggleTopic(this)">👨‍👩‍👧 Family & Relationships</button>
+                <button class="topic-chip" onclick="toggleTopic(this)">🌅 Morning & Evening Routines</button>
+                <button class="topic-chip" onclick="toggleTopic(this)">📖 Reminiscing & Stories</button>
+                <button class="topic-chip" onclick="toggleTopic(this)">😌 Stress Relief & Quiet Moments</button>
+                <button class="topic-chip" onclick="toggleTopic(this)">☕ Casual Daily Chai Chats</button>
+                <button class="topic-chip" onclick="toggleTopic(this)">📰 Books, News & World</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Trusted Contact -->
+        <div id="obStep5" style="display: none;">
+            <div class="step-kicker">STEP 5 OF 5</div>
+            <div class="step-title">Add a person you trust</div>
+            <div class="step-sub">Optional. In case of an emergency, Nuvin can reach out to this person.</div>
+
+            <label class="input-label">CONTACT NAME · OPTIONAL</label>
+            <input type="text" class="auth-input" id="obKinName" placeholder="e.g. Aarav Sharma (Son)" style="margin-bottom: 20px;">
+
+            <label class="input-label">PHONE NUMBER · OPTIONAL</label>
+            <input type="tel" class="auth-input" id="obKinPhone" placeholder="+91 98765 43210" style="margin-bottom: 20px;">
+
+            <div style="color: #8F9FB5; font-size: 0.8rem; line-height: 1.4; display: flex; gap: 8px;">
+                <span>🔒</span>
+                <span>Personal setup and contacts are stored strictly on this device. Never shared without consent.</span>
+            </div>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button class="submit-btn" id="obNextBtn" onclick="nextOnboardingStep()" style="width: 100%;">Continue</button>
+        </div>
+    </div>
+
+    <!-- 1. UNAUTHENTICATED HOMEPAGE / AUTH SCREEN (Pixel-perfect to screenshots) -->
+    <div class="auth-view" id="authView" style="display: none;">
+        <div class="auth-brand-row">
+            <!-- NuvinMark SVG -->
+            <svg width="42" height="42" viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="23" fill="#17223C" />
+                <path d="M11 27.5c0-8.8 5.8-15.5 13-15.5 4.2 0 7.7 2.1 10 5.6" fill="none" stroke="#48CAE4" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M37 20.5c0 8.8-5.8 15.5-13 15.5-4.2 0-7.7-2.1-10-5.6" fill="none" stroke="#FFB703" stroke-width="4.5" stroke-linecap="round"/>
+                <circle cx="35" cy="15" r="2.2" fill="#48CAE4" />
+                <circle cx="13" cy="33" r="2.2" fill="#FFB703" />
+            </svg>
+            <div>
+                <div class="auth-brand-name">nuvin</div>
+                <div class="auth-brand-caption">A little more support, on your terms.</div>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-eyebrow">YOUR PRIVATE SPACE</div>
+            <div class="auth-title" id="authTitle">Welcome back</div>
+            <div class="auth-subtitle" id="authSubtitle">Sign in to continue with your companion.</div>
+
+            <!-- Quick 1-Tap Demo Accounts -->
+            <div style="background: rgba(11, 19, 43, 0.7); border: 1px solid var(--border); border-radius: 14px; padding: 10px; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.8px; color: var(--accent); margin-bottom: 8px;">
+                    <span>⚡ QUICK DEMO ACCOUNTS (1-TAP):</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" style="flex: 1; padding: 8px 10px; border-radius: 10px; background: rgba(72, 202, 228, 0.12); border: 1px solid rgba(72, 202, 228, 0.35); color: var(--primary); font-size: 0.75rem; font-weight: 700; cursor: pointer; text-align: left;" onclick="loginAsDemo('asha')">
+                        <div>Asha (62)</div>
+                        <div style="font-size: 0.65rem; color: var(--muted-fg); font-weight: 500;">Elder Mode</div>
+                    </button>
+                    <button type="button" style="flex: 1; padding: 8px 10px; border-radius: 10px; background: rgba(255, 183, 3, 0.12); border: 1px solid rgba(255, 183, 3, 0.35); color: var(--accent); font-size: 0.75rem; font-weight: 700; cursor: pointer; text-align: left;" onclick="loginAsDemo('rohan')">
+                        <div>Rohan (29)</div>
+                        <div style="font-size: 0.65rem; color: var(--muted-fg); font-weight: 500;">Ear Mode</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Segmented Control -->
+            <div class="auth-mode-switch">
+                <button class="auth-mode-btn active" id="btnModeSignIn" onclick="setAuthMode('signIn')">Sign in</button>
+                <button class="auth-mode-btn" id="btnModeSignUp" onclick="setAuthMode('signUp')">Create account</button>
+            </div>
+
+            <!-- Continue with Google -->
+            <button class="google-btn" onclick="submitAuth()">
+                <div class="google-icon-circle">G</div>
+                <span>Continue with Google</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="auth-divider">
+                <div class="auth-divider-line"></div>
+                <div class="auth-divider-text">or with email</div>
+                <div class="auth-divider-line"></div>
+            </div>
+
+            <!-- Form -->
+            <div class="auth-field-label">Email address</div>
+            <div class="auth-input-box">
+                <input type="email" id="authEmail" placeholder="you@example.com" value="asha@example.com" />
+            </div>
+
+            <div class="auth-field-label">Password</div>
+            <div class="auth-input-box">
+                <input type="password" id="authPassword" placeholder="Enter your password" value="password123" onkeypress="if(event.key==='Enter') submitAuth()" />
+            </div>
+
+            <!-- Action Button -->
+            <button class="auth-submit-btn" id="authSubmitBtn" onclick="submitAuth()">
+                <span id="authSubmitText">Sign in</span>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+
+            <div class="auth-footnote">
+                Your memories and personal setup stay on this device.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. AUTHENTICATED COMPANION VIEW -->
+    <div class="companion-view" id="companionView">
+        <div class="header">
+            <div class="brand">
+                <svg width="38" height="38" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="23" fill="#17223C" />
+                    <path d="M11 27.5c0-8.8 5.8-15.5 13-15.5 4.2 0 7.7 2.1 10 5.6" fill="none" stroke="#48CAE4" stroke-width="4.5" stroke-linecap="round"/>
+                    <path d="M37 20.5c0 8.8-5.8 15.5-13 15.5-4.2 0-7.7-2.1-10-5.6" fill="none" stroke="#FFB703" stroke-width="4.5" stroke-linecap="round"/>
+                    <circle cx="35" cy="15" r="2.2" fill="#48CAE4" />
+                    <circle cx="13" cy="33" r="2.2" fill="#FFB703" />
+                </svg>
+                <div>
+                    <div class="brand-name">nuvin</div>
+                    <div class="online-row">
+                        <div class="online-dot"></div>
+                        <span>A little more support</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="openProfile()" title="Account & Memory Vault">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+                <button class="sos-btn" onclick="openSos()">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    <span>SOS</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-scroll" id="mainScroll">
+            <div class="welcome-line">
+                <div>
+                    <div class="day-label">YOUR SPACE</div>
+                    <div class="welcome-title">Take a breath.</div>
+                </div>
+                <div class="private-tag">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>On this device</span>
+                </div>
+            </div>
+
+            <div class="mode-switch">
+                <button class="mode-opt active" id="tabChat" onclick="setMode('chat')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span>Chat</span>
+                </button>
+                <button class="mode-opt" id="tabVoice" onclick="setMode('voice')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    <span>Voice</span>
+                </button>
+            </div>
+
+            <div class="feed" id="chatFeed">
+                <div class="msg-row">
+                    <div class="msg-avatar">✨</div>
+                    <div class="bubble assistant">
+                        Good afternoon. I'm Nuvin, here if you need a reminder or a quiet moment.
+                    </div>
+                </div>
+
+                <div class="action-card" id="medCard">
+                    <div class="card-heading-row">
+                        <div class="icon-tile" style="background: rgba(255, 183, 3, 0.14);">
+                            <svg width="22" height="22" fill="none" stroke="#FFB703" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                        </div>
+                        <div class="card-title-copy">
+                            <div class="card-title">Afternoon blood pressure medicine</div>
+                            <div class="card-eyebrow" id="medStatusLabel">Due this afternoon</div>
+                        </div>
+                    </div>
+                    <div class="card-body-box">
+                        Amlodipine 5mg · 1 tablet with warm water
+                    </div>
+                    <div class="action-grid" id="medActionGrid">
+                        <button class="action-pill-btn success" onclick="markMedicine('taken')"><span>✓ Taken</span></button>
+                        <button class="action-pill-btn" onclick="markMedicine('snooze')"><span>⏱ Snooze 15m</span></button>
+                        <button class="action-pill-btn" onclick="markMedicine('skip')"><span>⏭ Skip today</span></button>
+                        <button class="action-pill-btn danger" onclick="markMedicine('help')"><span>🆘 Need help</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="voice-section" id="voiceSection">
+                <div class="orb-stage" onclick="cycleVoiceOrb()">
+                    <div class="orb-ripple"></div>
+                    <div class="orb-ring"></div>
+                    <div class="orb-core">
+                        <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                    </div>
+                </div>
+                <div class="orb-status" id="orbLabel">I’m here when you’re ready</div>
+                <div class="orb-hint">Tap the orb to preview voice states</div>
+            </div>
+        </div>
+
+        <div class="composer">
+            <div class="input-tray" id="chatTray">
+                <input type="text" id="userInput" placeholder="Type a thought or question…" onkeypress="if(event.key==='Enter') sendUserMessage()" />
+                <button class="send-btn" onclick="sendUserMessage()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </button>
+            </div>
+            <div class="output-choices" id="voiceTray" style="display: none;">
+                <button class="audio-pill active">🔊 Speaker</button>
+                <button class="audio-pill">📞 Call mode</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="sosModal">
+        <div class="sheet-card" style="border-color: var(--destructive); text-align: center; align-items: center;">
+            <svg width="56" height="56" fill="var(--destructive)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            <div style="font-weight: 800; color: var(--destructive); font-size: 1.1rem;">EMERGENCY SAFETY PREVIEW</div>
+            <div style="font-size: 3rem; font-weight: 900;" id="sosCountdown">5</div>
+            <div style="font-size: 0.85rem; color: var(--muted-fg);">Dispatching siren sound & SMS alert to emergency contact with 8-Hour live Google Maps tracker.</div>
+            <button class="action-pill-btn" style="background: var(--secondary); margin-top: 10px; width: 100%;" onclick="closeSos()">Cancel Alert</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal" onclick="if(event.target===this) closeProfile()">
+        <div class="sheet-card" style="padding: 16px 20px 24px; border-radius: 28px 28px 0 0; background: #131E33; border: 1px solid #28364F; gap: 0;">
+            <div class="sheet-handle" style="margin-bottom: 16px; background: #64738A; opacity: 1; width: 38px;"></div>
+            
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div>
+                    <div style="font-size: 0.68rem; font-weight: 700; color: #68C9D8; letter-spacing: 1.5px;">YOUR ACCOUNT</div>
+                    <div style="font-size: 1.7rem; font-weight: 800; color: #F1F5F8; line-height: 1.2; margin-top: 2px;">Profile</div>
+                </div>
+                <button onclick="closeProfile()" style="background: rgba(255,255,255,0.08); border: none; border-radius: 14px; width: 40px; height: 40px; color: #C7D3E2; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+            </div>
+
+            <!-- Identity -->
+            <div style="display: flex; align-items: center; gap: 14px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <div style="width: 44px; height: 44px; flex-shrink: 0;">
+                    <svg viewBox="0 0 100 100" width="44" height="44">
+                        <circle cx="50" cy="50" r="38" fill="none" stroke="#48CAE4" stroke-width="11" stroke-linecap="round" stroke-dasharray="140 100" />
+                        <circle cx="50" cy="50" r="38" fill="none" stroke="#FFB703" stroke-width="11" stroke-linecap="round" stroke-dasharray="70 170" stroke-dashoffset="-140" />
+                    </svg>
+                </div>
+                <div>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #F2F6FA;" id="profileDisplayName">Nuvin member</div>
+                    <div style="font-size: 0.8rem; color: #AAB7C9; margin-top: 2px;" id="profileEmail">peeyush.panthari@gmail.com</div>
+                </div>
+            </div>
+
+            <!-- PERSONAL SETUP -->
+            <div style="font-size: 0.68rem; font-weight: 700; color: #8F9FB5; letter-spacing: 1.3px; margin: 18px 0 9px;">PERSONAL SETUP</div>
+            
+            <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 4px 14px; margin-bottom: 9px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; min-height: 46px;">
+                    <span style="color: #9EADBF; font-size: 0.83rem;">Companion name</span>
+                    <span style="color: #E6EDF4; font-weight: 600; font-size: 0.83rem;" id="profileCompName">Nuvin</span>
+                </div>
+                <div style="height: 1px; background: rgba(255,255,255,0.07);"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; min-height: 46px;">
+                    <span style="color: #9EADBF; font-size: 0.83rem;">Age for personalization</span>
+                    <span style="color: #E6EDF4; font-weight: 600; font-size: 0.83rem;" id="profileAgeVal">Not shared</span>
+                </div>
+                <div style="height: 1px; background: rgba(255,255,255,0.07);"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; min-height: 46px;">
+                    <span style="color: #9EADBF; font-size: 0.83rem;">Trusted contact</span>
+                    <span style="color: #E6EDF4; font-weight: 600; font-size: 0.83rem;" id="profileKinVal">Not added</span>
+                </div>
+            </div>
+
+            <!-- Action Tile 1: Edit personal setup -->
+            <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 12px; margin-bottom: 9px; display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="alert('Setup preferences: You can customize companion name & kin settings.')">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(72,202,228,0.12); display: flex; align-items: center; justify-content: center; color: #70D7E4;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M1 14h6m2-6h6m2 8h6"/></svg>
+                </div>
+                <div style="flex: 1;">
+                    <div style="color: #EAF0F6; font-size: 0.85rem; font-weight: 600;">Edit personal setup</div>
+                    <div style="color: #8998AD; font-size: 0.73rem; margin-top: 2px;">Preferences and trusted contact</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8290A4" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <!-- Action Tile 2: Memory Vault -->
+            <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="closeProfile(); alert('Memory Vault: 3 saved memories on this device.')">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(72,202,228,0.12); display: flex; align-items: center; justify-content: center; color: #70D7E4;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div style="flex: 1;">
+                    <div style="color: #EAF0F6; font-size: 0.85rem; font-weight: 600;">Memory Vault</div>
+                    <div style="color: #8998AD; font-size: 0.73rem; margin-top: 2px;">3 saved memories</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8290A4" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <div style="height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 12px;"></div>
+
+            <!-- Privacy footnote -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#48CAE4" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span style="color: #9CAFC1; font-size: 0.75rem;">Personal setup and memories stay on this device.</span>
+            </div>
+
+            <!-- Sign out button -->
+            <button onclick="signOut()" style="width: 100%; height: 48px; border-radius: 13px; background: rgba(230,57,70,0.09); border: 1px solid rgba(230,57,70,0.25); color: #F08A91; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F08A91" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Sign out</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Intro Carousel state & logic
+    const introSlides = [
+        {
+            title: "A safe space for what you can't say out loud.",
+            sub: "Nuvin listens — gently, without judgment, whenever you need.",
+            img: "/intro/clean_bg_1.jpg",
+            fallbackBg: "#2c333f",
+            btn: "Continue",
+            skip: "Skip"
+        },
+        {
+            title: "Talk, type, or simply breathe.",
+            sub: "Open a chat, make a call, or sit together in quiet.",
+            img: "/intro/clean_bg_2.jpg",
+            fallbackBg: "#374635",
+            btn: "Continue",
+            skip: "Skip"
+        },
+        {
+            title: "Little nudges for your day.",
+            sub: "Medicines, birthdays, the small things — I'll remember with you.",
+            img: "/intro/clean_bg_3.jpg",
+            fallbackBg: "#404845",
+            btn: "Continue",
+            skip: "I already have an account"
+        }
+    ];
+    let currentIntroIndex = 0;
+
+    function renderIntroSlide() {
+        const s = introSlides[currentIntroIndex];
+        document.getElementById('introTitle').innerText = s.title;
+        document.getElementById('introSub').innerText = s.sub;
+        const introEl = document.getElementById('introView');
+        introEl.style.backgroundColor = s.fallbackBg;
+        introEl.style.backgroundImage = `url('${s.img}')`;
+        document.getElementById('introBtnText').innerText = s.btn;
+        document.getElementById('introSkipBtn').innerText = s.skip;
+        for (let i = 0; i < 3; i++) {
+            document.getElementById('dot' + i).className = 'intro-dot' + (i === currentIntroIndex ? ' active' : '');
+        }
+    }
+
+    function nextIntroSlide() {
+        if (currentIntroIndex < 2) {
+            currentIntroIndex++;
+            renderIntroSlide();
+        } else {
+            skipIntro();
+        }
+    }
+
+    function skipIntro() {
+        document.getElementById('introView').style.display = 'none';
+        document.getElementById('authView').style.display = 'flex';
+    }
+
+    // Onboarding Wizard state & logic
+    let obStep = 1;
+    function startOnboarding() {
+        document.getElementById('authView').style.display = 'none';
+        document.getElementById('onboardingView').style.display = 'flex';
+        obStep = 1;
+        renderObStep();
+    }
+
+    function renderObStep() {
+        for (let i = 1; i <= 5; i++) {
+            const el = document.getElementById('obStep' + i);
+            if (el) el.style.display = (i === obStep ? 'block' : 'none');
+        }
+        document.getElementById('onboardingProgress').style.width = (obStep * 20) + '%';
+        document.getElementById('onboardingBackBtn').style.visibility = (obStep > 1 ? 'visible' : 'hidden');
+        document.getElementById('obNextBtn').innerText = (obStep === 5 ? 'Complete Setup & Start Talking' : 'Continue');
+    }
+
+    function nextOnboardingStep() {
+        if (obStep < 5) {
+            obStep++;
+            renderObStep();
+        } else {
+            completeOnboarding();
+        }
+    }
+
+    function prevOnboardingStep() {
+        if (obStep > 1) {
+            obStep--;
+            renderObStep();
+        }
+    }
+
+    function skipOnboarding() {
+        completeOnboarding();
+    }
+
+    function completeOnboarding() {
+        const userName = document.getElementById('obUserName').value.trim() || 'Nuvin member';
+        const compName = document.getElementById('obCompName').value.trim() || 'Nuvin';
+        const age = document.getElementById('obAge').value.trim() || '62';
+        const kinName = document.getElementById('obKinName').value.trim() || 'Not added';
+
+        document.getElementById('profileDisplayName').innerText = userName;
+        document.getElementById('profileCompName').innerText = compName;
+        document.getElementById('profileAgeVal').innerText = parseInt(age) >= 55 ? 'Added privately (55+)' : 'Added privately (25-34)';
+        document.getElementById('profileKinVal').innerText = kinName;
+
+        document.getElementById('onboardingView').style.display = 'none';
+        document.getElementById('companionView').style.display = 'flex';
+    }
+
+    function setCompChoice(name) {
+        document.getElementById('obCompName').value = name;
+    }
+
+    function selectPersona(type) {
+        if (type === 'elder') {
+            document.getElementById('personaElderCard').classList.add('selected');
+            document.getElementById('personaEarCard').classList.remove('selected');
+            document.getElementById('obAge').value = '62';
+        } else {
+            document.getElementById('personaEarCard').classList.add('selected');
+            document.getElementById('personaElderCard').classList.remove('selected');
+            document.getElementById('obAge').value = '29';
+        }
+    }
+
+    function updatePersonaByAge(age) {
+        if (parseInt(age) >= 55) {
+            selectPersona('elder');
+        } else {
+            selectPersona('ear');
+        }
+    }
+
+    function selectOcc(card, title) {
+        document.querySelectorAll('#obStep3 .option-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+    }
+
+    function toggleTopic(chip) {
+        chip.classList.toggle('selected');
+    }
+
+    let authMode = 'signIn';
+
+    function setAuthMode(mode) {
+        authMode = mode;
+        if (mode === 'signIn') {
+            document.getElementById('btnModeSignIn').classList.add('active');
+            document.getElementById('btnModeSignUp').classList.remove('active');
+            document.getElementById('authTitle').innerText = 'Welcome back';
+            document.getElementById('authSubtitle').innerText = 'Sign in to continue with your companion.';
+            document.getElementById('authSubmitText').innerText = 'Sign in';
+        } else {
+            document.getElementById('btnModeSignUp').classList.add('active');
+            document.getElementById('btnModeSignIn').classList.remove('active');
+            document.getElementById('authTitle').innerText = 'Create your account';
+            document.getElementById('authSubtitle').innerText = 'Set up an account to return to Nuvin on this device.';
+            document.getElementById('authSubmitText').innerText = 'Create account';
+        }
+    }
+
+    function loginAsDemo(who) {
+        if (who === 'rohan') {
+            document.getElementById('authEmail').value = 'rohan.mehta@example.com';
+            document.getElementById('authPassword').value = 'nuvin2026';
+            submitAuth('rohan');
+        } else {
+            document.getElementById('authEmail').value = 'asha.sharma@example.com';
+            document.getElementById('authPassword').value = 'nuvin2026';
+            submitAuth('asha');
+        }
+    }
+
+    function submitAuth(userType) {
+        if (authMode === 'signUp' && !userType) {
+            startOnboarding();
+            return;
+        }
+
+        const emailInput = document.getElementById('authEmail').value.trim();
+        const disp = document.getElementById('profileDisplayName');
+        const mail = document.getElementById('profileEmail');
+        const comp = document.getElementById('profileCompName');
+        const age = document.getElementById('profileAgeVal');
+        const kin = document.getElementById('profileKinVal');
+
+        if (userType === 'rohan' || emailInput.includes('rohan')) {
+            disp.innerText = 'Rohan Mehta';
+            mail.innerText = 'rohan.mehta@example.com';
+            comp.innerText = 'Saathi';
+            age.innerText = 'Added privately (25-34)';
+            kin.innerText = 'Priya (Partner)';
+        } else if (userType === 'asha' || emailInput.includes('asha')) {
+            disp.innerText = 'Asha Sharma';
+            mail.innerText = 'asha.sharma@example.com';
+            comp.innerText = 'Nuvin';
+            age.innerText = 'Added privately (55+)';
+            kin.innerText = 'Aarav Sharma (Son)';
+        } else {
+            disp.innerText = 'Nuvin member';
+            mail.innerText = emailInput || 'peeyush.panthari@gmail.com';
+            comp.innerText = 'Nuvin';
+            age.innerText = 'Not shared';
+            kin.innerText = 'Not added';
+        }
+
+        document.getElementById('authView').style.display = 'none';
+        document.getElementById('companionView').style.display = 'flex';
+    }
+
+    function signOut() {
+        closeProfile();
+        document.getElementById('companionView').style.display = 'none';
+        currentIntroIndex = 0;
+        renderIntroSlide();
+        document.getElementById('introView').style.display = 'flex';
+    }
+
+    function setMode(mode) {
+        if (mode === 'chat') {
+            document.getElementById('tabChat').classList.add('active');
+            document.getElementById('tabVoice').classList.remove('active');
+            document.getElementById('chatFeed').style.display = 'flex';
+            document.getElementById('voiceSection').style.display = 'none';
+            document.getElementById('chatTray').style.display = 'flex';
+            document.getElementById('voiceTray').style.display = 'none';
+            document.getElementById('mainScroll').style.overflowY = 'auto';
+        } else {
+            document.getElementById('tabVoice').classList.add('active');
+            document.getElementById('tabChat').classList.remove('active');
+            document.getElementById('chatFeed').style.display = 'none';
+            document.getElementById('voiceSection').style.display = 'flex';
+            document.getElementById('chatTray').style.display = 'none';
+            document.getElementById('voiceTray').style.display = 'flex';
+            document.getElementById('mainScroll').style.overflowY = 'hidden';
+        }
+    }
+
+    let orbStateIndex = 0;
+    const orbLabels = ['I’m here when you’re ready', 'Listening…', 'Thinking…', 'Speaking…'];
+    function cycleVoiceOrb() {
+        orbStateIndex = (orbStateIndex + 1) % orbLabels.length;
+        document.getElementById('orbLabel').innerText = orbLabels[orbStateIndex];
+    }
+
+    function markMedicine(action) {
+        const statusMap = {
+            'taken': 'Marked as taken ✓',
+            'snooze': 'Snoozed for 15 minutes',
+            'skip': 'Skipped for today',
+            'help': 'Help requested'
+        };
+        document.getElementById('medStatusLabel').innerText = statusMap[action];
+        document.getElementById('medActionGrid').innerHTML = `<div style="color: var(--success); font-weight: 700; padding: 6px 0;">${statusMap[action]}</div>`;
+    }
+
+    let sosTimer = null;
+    let sosCount = 5;
+    function openSos() {
+        document.getElementById('sosModal').style.display = 'flex';
+        sosCount = 5;
+        document.getElementById('sosCountdown').innerText = sosCount;
+        sosTimer = setInterval(() => {
+            sosCount--;
+            if (sosCount <= 0) {
+                clearInterval(sosTimer);
+                document.getElementById('sosCountdown').innerText = '🚨 Dispatched';
+            } else {
+                document.getElementById('sosCountdown').innerText = sosCount;
+            }
+        }, 1000);
+    }
+    function closeSos() {
+        if (sosTimer) clearInterval(sosTimer);
+        document.getElementById('sosModal').style.display = 'none';
+    }
+
+    function openProfile() { document.getElementById('profileModal').style.display = 'flex'; }
+    function closeProfile() { document.getElementById('profileModal').style.display = 'none'; }
+
+    async function sendUserMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        const feed = document.getElementById('chatFeed');
+        const userRow = document.createElement('div');
+        userRow.className = 'msg-row user';
+        userRow.innerHTML = `<div class="bubble user">${text}</div>`;
+        feed.appendChild(userRow);
+
+        const assistantRow = document.createElement('div');
+        assistantRow.className = 'msg-row';
+        assistantRow.innerHTML = `<div class="msg-avatar">✨</div><div class="bubble assistant">Thinking…</div>`;
+        feed.appendChild(assistantRow);
+        document.getElementById('mainScroll').scrollTop = document.getElementById('mainScroll').scrollHeight;
+
+        try {
+            let resp = await fetch('/api/v1/agent/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: 'default_user', message: text })
+            });
+            if (!resp.ok) {
+                // Fallback to /agent/chat
+                resp = await fetch('/agent/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: 'default_user', message: text })
+                });
+            }
+            if (resp.ok) {
+                const data = await resp.json();
+                console.log("[Nuvin API Response]:", data);
+                const replyText = data.spoken_response || data.reply || data.response || data.text;
+                assistantRow.querySelector('.bubble').innerText = replyText || "I am right here with you.";
+
+                // Handle OpenUI Card display if present
+                if (data.open_ui_card) {
+                    const cardRow = document.createElement('div');
+                    cardRow.className = 'msg-row';
+                    const card = data.open_ui_card;
+                    let cardHtml = `<div class="action-card" style="margin-top: 6px; width: 100%;">
+                        <div class="card-title" style="color: var(--teal); margin-bottom: 4px;">${card.title || 'Action'}</div>`;
+                    if (card.items && Array.isArray(card.items)) {
+                        card.items.forEach(it => {
+                            cardHtml += `<div style="font-size: 0.8rem; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.08);">${it.label || it.category}: ${it.detail}</div>`;
+                        });
+                    } else if (card.reminder_title) {
+                        cardHtml += `<div style="font-size: 0.85rem;"><strong>${card.reminder_title}</strong> (${card.schedule || 'Scheduled'})</div>`;
+                    }
+                    cardHtml += `</div>`;
+                    cardRow.innerHTML = `<div class="msg-avatar">📋</div>${cardHtml}`;
+                    feed.appendChild(cardRow);
+                }
+            } else {
+                console.error("[Nuvin API HTTP Error]:", resp.status);
+                assistantRow.querySelector('.bubble').innerText = `Error: Server returned status ${resp.status}.`;
+            }
+        } catch (e) {
+            console.error("[Nuvin Chat Error]:", e);
+            assistantRow.querySelector('.bubble').innerText = `Connection error: ${e.message}. Please refresh the page.`;
+        }
+        document.getElementById('mainScroll').scrollTop = document.getElementById('mainScroll').scrollHeight;
+    }
+</script>
+
+</body>
+</html>
